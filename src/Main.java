@@ -1,13 +1,13 @@
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Main {
     public static void main(String[] args) {
-        List<Funcionario> func = new ArrayList<>(Arrays.asList( //Alimentar tabela com os dados dos funcionários
+        //Alimentar lista com os dados dos funcionários
+        List<Funcionario> func = new ArrayList<>(Arrays.asList(
                 new Funcionario("Maria", LocalDate.of(2000, 10, 18), new BigDecimal("2009.44"), "Operador"),
                 new Funcionario("João", LocalDate.of(1990, 5, 12), new BigDecimal("2284.38"), "Operador"),
                 new Funcionario("Caio", LocalDate.of(1961, 5, 2), new BigDecimal("9836.14"), "Coordenador"),
@@ -20,9 +20,9 @@ public class Main {
                 new Funcionario("Helena", LocalDate.of(1996, 9, 2), new BigDecimal("2799.93"), "Gerente")
         ));
 
-        //Impressão completa
+        //Impressão completa Inicial
         for (int i = 0; i < func.size(); i++){
-            System.out.println(func.get(i).imprimir());
+            System.out.println(func.get(i));
         }
         System.out.println("\n");
 
@@ -35,7 +35,7 @@ public class Main {
 
         //Impressão sem João
         for (int i = 0; i < func.size(); i++){
-            System.out.println(func.get(i).imprimir());
+            System.out.println(func.get(i));
         }
         System.out.println("\n");
 
@@ -44,13 +44,46 @@ public class Main {
             func.get(i).salario = func.get(i).salario.multiply(new BigDecimal("1.10"));
         }
 
-        //Impressão completa
+        //Impressão completa com aumento salarial
         for (int i = 0; i < func.size(); i++){
-            System.out.println(func.get(i).imprimir());
+            System.out.println(func.get(i));
         }
-        System.out.println("\n");
 
-        //
+        //Impotar Arraylist de Funcionários para MAP agrupando por função
+        Map<String, List<Funcionario>> funcMap = func.stream().collect(Collectors.groupingBy(Funcionario::getFuncao));
+
+        //Impressão do Mapa
+        System.out.println("\nImpressão da lista organizada por funções");
+        funcMap.forEach((funcao, colaboradores) -> {
+            System.out.println(funcao + "  " + colaboradores);
+        });
+
+        //Impressão de Funcionários que fazem aniversário nos meses 10 e 12
+        System.out.println("\nOs funcionários que fazem aniversário nos meses de Outubro e Dezembro são:");
+        funcMap.values().stream().flatMap(List::stream)
+                .filter(f -> f.dataNasc.getMonthValue() == 10 || f.dataNasc.getMonthValue() == 12)
+                .forEach(System.out::println);
+
+        //Impressão de Funcionário com a maior idade
+        System.out.println("\n");
+        var maisVelho = func.stream().min(Comparator.comparing(Funcionario::getDataNasc)).get();
+        var idade = ChronoUnit.YEARS.between(maisVelho.getDataNasc(), LocalDate.now());
+        System.out.println(String.format("O funcionário mais velho se chama %s e possui %d anos de idade ", maisVelho.getNome(), idade));
+
+        //Impressão de Funcionários em ordem alfabética
+        System.out.println("\nLista de funcionários em ordem alfabética");
+        funcMap.values().stream().flatMap(List::stream)
+                .sorted(Comparator.comparing(Funcionario::getNome))
+                .forEach(System.out::println);
+
+        //Imprimir total dos salários dos funcionários
+        BigDecimal total = funcMap.values().stream().flatMap(List::stream).map(f -> f.salario).reduce(BigDecimal.ZERO, BigDecimal::add);
+        System.out.println("\nO total da folha de pagamento é: R$ " + Funcionario.df.format(total));
+
+        //Imprimir quantos salários mínimos ganha cada funcionário
+
+
+
 
 
     }

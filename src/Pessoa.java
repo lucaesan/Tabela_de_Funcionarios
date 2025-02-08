@@ -1,5 +1,4 @@
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 public class Pessoa {
     public String nome;
@@ -19,7 +18,7 @@ public class Pessoa {
         this.nome = nome;
     }
 
-    public LocalDate getData_Nasc() {
+    public LocalDate getDataNasc() {
         return dataNasc;
     }
 

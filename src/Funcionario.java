@@ -1,20 +1,23 @@
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DecimalStyle;
 
 public class Funcionario extends Pessoa {
    public BigDecimal salario;
    public String funcao;
 
+   // Formatar data
+   DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+   //Formatar Bigdecimal
+   static DecimalFormat df = new DecimalFormat("#,##0.00");
+
    public Funcionario (String nome, LocalDate dataNasc, BigDecimal salario, String funcao){
       super(nome, dataNasc);
       this.salario = salario;
       this.funcao = funcao;
-   }
-
-   String imprimir() { //Usado para impressão dos registros
-      DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy"); // Formatar data
-      return  nome +" "+ this.dataNasc.format(formatter) +" "+ this.salario +" "+ this.funcao;
    }
 
    public BigDecimal getSalario() {
@@ -32,4 +35,11 @@ public class Funcionario extends Pessoa {
    public void setFuncao(String funcao) {
       this.funcao = funcao;
    }
+
+   //Organiza e formata as informações retornadas pelo Objeto.
+   @Override
+   public String toString(){
+      return "Nome: "+ nome + " | Data de Nascimento: " + dataNasc.format(formatter) +" | Salário: "+ df.format(salario) +" | Função: "+ funcao;
+   }
+
 }
