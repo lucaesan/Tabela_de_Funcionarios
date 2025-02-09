@@ -65,7 +65,6 @@ public class Main {
         //Imprimir quantos salários mínimos ganha cada funcionário
         qtdSalarios(new BigDecimal(1212), funcMap);
 
-
     }
 
     //Metodo para remoção de funcionário
