@@ -4,9 +4,9 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DecimalStyle;
 
-public class Funcionario extends Pessoa {
-   public BigDecimal salario;
-   public String funcao;
+class Funcionario extends Pessoa {
+   private BigDecimal salario;
+   private String funcao;
 
    // Formatar data
    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");

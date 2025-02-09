@@ -1,10 +1,12 @@
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class Main {
+
     public static void main(String[] args) {
         //Alimentar lista com os dados dos funcionários
         List<Funcionario> func = new ArrayList<>(Arrays.asList(
@@ -20,33 +22,20 @@ public class Main {
                 new Funcionario("Helena", LocalDate.of(1996, 9, 2), new BigDecimal("2799.93"), "Gerente")
         ));
 
-        //Impressão completa Inicial
-        for (int i = 0; i < func.size(); i++){
-            System.out.println(func.get(i));
-        }
-        System.out.println("\n");
+        //Como se trata de um teste optei por não declarar funções e escrever tudo direto no main para que fique mais fácil de vizualizar o passo a passo de como o código realiza cada uma das exigências
 
         //Remover João
-        for (int i = 0; i < func.size(); i++){
-            if(func.get(i).nome == "João") {
-                func.remove(i);
-            }
-        }
+        removerFuncionario("João", func);
 
-        //Impressão sem João
+        //Impressão Após remoção do João
+        System.out.println("\n");
         for (int i = 0; i < func.size(); i++){
             System.out.println(func.get(i));
         }
-        System.out.println("\n");
 
         //Aumento salarial 10%
         for (int i = 0; i < func.size(); i++){
-            func.get(i).salario = func.get(i).salario.multiply(new BigDecimal("1.10"));
-        }
-
-        //Impressão completa com aumento salarial
-        for (int i = 0; i < func.size(); i++){
-            System.out.println(func.get(i));
+            func.get(i).setSalario(func.get(i).getSalario().multiply(new BigDecimal("1.10")));
         }
 
         //Impotar Arraylist de Funcionários para MAP agrupando por função
@@ -64,11 +53,8 @@ public class Main {
                 .filter(f -> f.dataNasc.getMonthValue() == 10 || f.dataNasc.getMonthValue() == 12)
                 .forEach(System.out::println);
 
-        //Impressão de Funcionário com a maior idade
-        System.out.println("\n");
-        var maisVelho = func.stream().min(Comparator.comparing(Funcionario::getDataNasc)).get();
-        var idade = ChronoUnit.YEARS.between(maisVelho.getDataNasc(), LocalDate.now());
-        System.out.println(String.format("O funcionário mais velho se chama %s e possui %d anos de idade ", maisVelho.getNome(), idade));
+        //Impressão de Funcionário mais velho
+        maisVelho(func);
 
         //Impressão de Funcionários em ordem alfabética
         System.out.println("\nLista de funcionários em ordem alfabética");
@@ -77,16 +63,40 @@ public class Main {
                 .forEach(System.out::println);
 
         //Imprimir total dos salários dos funcionários
-        BigDecimal total = funcMap.values().stream().flatMap(List::stream).map(f -> f.salario).reduce(BigDecimal.ZERO, BigDecimal::add);
-        System.out.println("\nO total da folha de pagamento é: R$ " + Funcionario.df.format(total));
+        totalFolha(funcMap);
 
         //Imprimir quantos salários mínimos ganha cada funcionário
-
-
-
+        qtdSalarios(new BigDecimal(1212), funcMap);
 
 
     }
 
+    //Metodo para remoção de funcionário
+    private static void removerFuncionario(String nome, List<Funcionario> func) {
+        func.removeIf(f -> Objects.equals(f.getNome(), nome));
+    }
+
+    //Metodo para encontrar o funcionário mais velho
+    private static void maisVelho(List<Funcionario> func){
+        var maisVelho = func.stream().min(Comparator.comparing(Funcionario::getDataNasc)).get();
+        var idade = ChronoUnit.YEARS.between(maisVelho.getDataNasc(), LocalDate.now());
+        System.out.println(String.format("\nO funcionário mais velho se chama %s e possui %d anos de idade ", maisVelho.getNome(), idade));
+    }
+
+    //Metodo para calcular a folha de pagamento
+    private static void totalFolha(Map<String, List<Funcionario>> funcMap ){
+        BigDecimal total = funcMap.values().stream().flatMap(List::stream)
+                .map(f -> f.getSalario()).reduce(BigDecimal.ZERO, BigDecimal::add);
+        System.out.println("\nO total da folha de pagamento é: R$ " + Funcionario.df.format(total));
+    }
+
+    //Metodo para calcular quantos salários mínimos ganha cada funcionário
+    private static void qtdSalarios(BigDecimal salMin, Map<String, List<Funcionario>> funcMap){
+        System.out.println("\n");
+        funcMap.values().stream().flatMap(List::stream).forEach(f -> {
+                    BigDecimal qtdSal = f.getSalario().divide(salMin, 2, RoundingMode.DOWN);
+                    System.out.println(String.format("%s recebe %.2f salários mínimos",f.getNome(), qtdSal));
+                });
+    }
 
 }
