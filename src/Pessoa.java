@@ -1,9 +1,9 @@
 import java.time.LocalDate;
 
 public class Pessoa {
-    public String nome;
-    public LocalDate dataNasc;
-    public Funcionario Func;
+    private String nome;
+    private LocalDate dataNasc;
+    private Funcionario Func;
 
     public Pessoa (String nome, LocalDate dataNasc){
         this.nome = nome;

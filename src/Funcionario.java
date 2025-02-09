@@ -2,7 +2,6 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DecimalStyle;
 
 class Funcionario extends Pessoa {
    private BigDecimal salario;
@@ -39,7 +38,7 @@ class Funcionario extends Pessoa {
    //Organiza e formata as informações retornadas pelo Objeto.
    @Override
    public String toString(){
-      return "Nome: "+ nome + " | Data de Nascimento: " + dataNasc.format(formatter) +" | Salário: "+ df.format(salario) +" | Função: "+ funcao;
+      return String.format("Nome: %s | Data de Nascimento: %s | Salário: R$ %s | Função: %s ",getNome(), getDataNasc().format(formatter), df.format(getSalario()), getFuncao());
    }
 
 }
