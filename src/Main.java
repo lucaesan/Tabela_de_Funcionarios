@@ -22,8 +22,6 @@ public class Main {
                 new Funcionario("Helena", LocalDate.of(1996, 9, 2), new BigDecimal("2799.93"), "Gerente")
         ));
 
-        //Como se trata de um teste optei por não declarar funções e escrever tudo direto no main para que fique mais fácil de vizualizar o passo a passo de como o código realiza cada uma das exigências
-
         //Remover João
         removerFuncionario("João", func);
 
