@@ -43,14 +43,13 @@ public class Main {
 
         //Impressão do Mapa
         System.out.println("\nImpressão da lista organizada por funções");
-        funcMap.forEach((funcao, colaboradores) -> {
-            System.out.println(funcao + "  " + colaboradores);
-        });
+        funcMap.forEach((funcao, colaboradores)
+                -> System.out.println(funcao + "  " + colaboradores));
 
         //Impressão de Funcionários que fazem aniversário nos meses 10 e 12
         System.out.println("\nOs funcionários que fazem aniversário nos meses de Outubro e Dezembro são:");
         funcMap.values().stream().flatMap(List::stream)
-                .filter(f -> f.dataNasc.getMonthValue() == 10 || f.dataNasc.getMonthValue() == 12)
+                .filter(f -> f.getDataNasc().getMonthValue() == 10 || f.getDataNasc().getMonthValue() == 12)
                 .forEach(System.out::println);
 
         //Impressão de Funcionário mais velho
@@ -80,7 +79,7 @@ public class Main {
     private static void maisVelho(List<Funcionario> func){
         var maisVelho = func.stream().min(Comparator.comparing(Funcionario::getDataNasc)).get();
         var idade = ChronoUnit.YEARS.between(maisVelho.getDataNasc(), LocalDate.now());
-        System.out.println(String.format("\nO funcionário mais velho se chama %s e possui %d anos de idade ", maisVelho.getNome(), idade));
+        System.out.printf("\nO funcionário mais velho se chama %s e possui %d anos de idade %n", maisVelho.getNome(), idade);
     }
 
     //Metodo para calcular a folha de pagamento
@@ -95,7 +94,7 @@ public class Main {
         System.out.println("\n");
         funcMap.values().stream().flatMap(List::stream).forEach(f -> {
                     BigDecimal qtdSal = f.getSalario().divide(salMin, 2, RoundingMode.DOWN);
-                    System.out.println(String.format("%s recebe %.2f salários mínimos",f.getNome(), qtdSal));
+                    System.out.printf("%s recebe %.2f salários mínimos%n",f.getNome(), qtdSal);
                 });
     }
 
